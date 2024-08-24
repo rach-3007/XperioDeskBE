@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('layout_entities', function (Blueprint $table) {
             $table->id();
-            $table->string('module_name');
-            $table->foreignId('building_id')->constrained('buildings');
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('layout_id')->constrained('layouts');
+            $table->enum('type',['Seat','Cabin','Conference','Partition']);
+            $table->string('x-position');
+            $table->string('y-position');
+            $table->string('rotation');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('layout_entities');
     }
 };
