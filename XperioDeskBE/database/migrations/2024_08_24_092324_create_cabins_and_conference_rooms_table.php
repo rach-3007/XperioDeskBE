@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('modules', function (Blueprint $table) {
+        Schema::create('cabins_and_conference_rooms', function (Blueprint $table) {
             $table->id();
-            $table->string('module_name');
-            $table->foreignId('building_id')->constrained('buildings');
-            $table->boolean('is_active')->default(true);
+            $table->foreignId('layout_entity_id')->constrained('layout_entities');
+            $table->enum('type',['cabin','conference_room']);
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('modules');
+        Schema::dropIfExists('cabins_and_conference_rooms');
     }
 };
