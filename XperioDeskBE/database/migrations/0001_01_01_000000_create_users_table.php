@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('role',['User','Admin','Privileged_User']);
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
             $table->foreignId('du_id')->constrained('du');
         });
 
