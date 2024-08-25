@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('layout_entity_id')->constrained('layout_entities');
             $table->enum('type',['cabin','conference_room']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
