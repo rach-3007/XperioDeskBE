@@ -23,6 +23,10 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'designation',
+        'role',
+        'du_id',
+        'email_verified_at',
     ];
 
     /**
@@ -43,9 +47,27 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
+
     /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
+     * Model Relationships.
+     * 
+     * 
+     */
+
+    public function du()
+    {
+        return $this->belongsTo(DU::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+    
+    
+    
+    /* Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
      */

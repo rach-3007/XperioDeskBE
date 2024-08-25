@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('seat_number');
             $table->foreignId('module_id')->constrained('modules');
-            $table->foreignId('booked_by_user_id')->constrained('users');
+            $table->foreignId('booked_by_user_id')->constrained('users')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->foreignId('layout_entitiesId')->constrained('layout_entities');
+            $table->foreignId('layout_entities_id')->constrained('layout_entities');
             $table->enum('status',['available','booked','permanently_booked'])->default('available');
             $table->timestamps();
         });
