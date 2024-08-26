@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->foreignId('layout_entities_id')->constrained('layout_entities');
             $table->enum('status',['available','booked','permanently_booked'])->default('available');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

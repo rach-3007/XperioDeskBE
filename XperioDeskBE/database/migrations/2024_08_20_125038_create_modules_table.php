@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('module_name');
             $table->foreignId('building_id')->constrained('buildings');
             $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
