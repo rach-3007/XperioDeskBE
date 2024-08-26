@@ -16,7 +16,7 @@ class SeatController extends Controller
 
     public function index()
     {
-        return response()->json($this->seatService.listAllSeats());
+        return response()->json($this->seatService->listAllSeats());
     }
 
     public function show($id)
