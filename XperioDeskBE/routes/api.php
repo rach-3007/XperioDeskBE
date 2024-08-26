@@ -15,6 +15,14 @@ Route::prefix('seats')->group(function () {
     Route::put('seats-restore/{id}', [SeatController::class, 'restore']);
 });
 
+Route::prefix('layouts')->group(function () {
+    Route::post('/', [LayoutController::class, 'store']);
+    Route::put('{id}', [LayoutController::class, 'update']);
+    Route::get('{id}', [LayoutController::class, 'show']);
+    Route::delete('{id}', [LayoutController::class, 'destroy']);
+});
+
+
 Route::prefix('user')->group(function () {
     Route::put('change-password', [UserController::class, 'changePassword']);
     Route::put('role/{id}', [UserController::class, 'updateRole']);
