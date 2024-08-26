@@ -27,7 +27,7 @@ class PartitionTable extends Model
      */
     public function layoutEntity()
     {
-        return $this->belongsTo(LayoutEntity::class, 'layout_entity_id');
+        return $this->belongsTo(LayoutEntity::class);
     }
 
 }
