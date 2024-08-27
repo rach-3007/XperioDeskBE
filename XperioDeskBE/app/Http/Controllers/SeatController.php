@@ -30,7 +30,7 @@ class SeatController extends Controller
             'seat_number' => 'required|string',
             'module_id' => 'required|exists:modules,id',
             'layout_entities_id' => 'required|exists:layout_entities,id',
-            // Add other validation rules as needed
+            
         ]);
 
         return response()->json($this->seatService->createSeat($data), 201);
@@ -42,7 +42,7 @@ class SeatController extends Controller
             'seat_number' => 'sometimes|string',
             'module_id' => 'sometimes|exists:modules,id',
             'layout_entities_id' => 'sometimes|exists:layout_entities,id',
-            // Add other validation rules as needed
+            
         ]);
 
         return response()->json($this->seatService->updateSeat($id, $data));
