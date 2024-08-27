@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
 use App\Http\Controllers\Controller;
 
+
 /**
  * @OA\Info(title="Layout API", version="1.0")
  */
 class LayoutController extends Controller
 {
     protected $layoutService;
+    
 
     public function __construct(LayoutServiceInterface $layoutService)
     {
@@ -163,14 +165,9 @@ class LayoutController extends Controller
      *     )
      * )
      */
-    public function createLayout(Request $request)
+    public function createLayoutWithEntities(Request $request)
     {
-         $this->validate($request, [
-            'layout_name' => 'required|string',
-            'entities' => 'required|array',
-            'entities.*.type' => 'required|string|in:seat,cabin,conference_room',
-        ]);
-
+      
         $layout = $this->layoutService->createLayoutWithEntities($request);
 
         return response()->json([

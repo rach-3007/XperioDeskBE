@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\CabinAndConferenceRoom;
 use App\Models\Layout;
+use App\Models\LayoutEntity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Seat;
@@ -24,8 +25,8 @@ class LayoutService implements LayoutServiceInterface
     public function createLayout(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'layout_name' => 'required|string|max:255',
+            
         ]);
 
         if ($validator->fails()) {
@@ -77,32 +78,95 @@ class LayoutService implements LayoutServiceInterface
         try {
             // Create the Layout
             $layout = Layout::create([
-                'name' => $request->layout_name,
+                'layout_name' => $request->layout_name,
+                'module_id' => $request->module_id,
                 // Add any other layout-specific fields
             ]);
-
+    
             // Create associated entities
             foreach ($request->entities as $entity) {
                 switch ($entity['type']) {
                     case 'seat':
+                        // Create a seat entity in the layout_entities table
+                        $layoutEntity = LayoutEntity::create([
+                            'layout_id' => $layout->id,
+                            'type' => 'Seat',
+                            'x-position' => $entity['x_position'],
+                            'y-position' => $entity['y_position'],
+                            'rotation' => $entity['rotation'],
+                        ]);
+    
+                        // Now create the seat itself
                         Seat::create([
-                            'layout_id' => $layout->id,
-                            // Add any other seat-specific fields
+                            'seat_number' => $entity['seat_number'],
+                            'module_id' => $request->module_id,
+                            'layout_entity_id' => $layoutEntity->id,
+                            'is_active' => true,
+                            'status' => 'available',
                         ]);
                         break;
+    
                     case 'cabin':
-                        CabinAndConferenceRoom::create([
+                        // Create a cabin entity in the layout_entities table
+                        $layoutEntity = LayoutEntity::create([
                             'layout_id' => $layout->id,
-                            // Add any other cabin-specific fields
+                            'type' => 'Cabin',
+                            'x-position' => $entity['x_position'],
+                            'y-position' => $entity['y_position'],
+                            'rotation' => $entity['rotation'],
+                        ]);
+    
+                        // Now create the cabin or conference room
+                        CabinAndConferenceRoom::create([
+                            'layout_entity_id' => $layoutEntity->id,
+                            'type' => 'cabin', // or 'conference_room' based on the entity type
                         ]);
                         break;
-                        
+    
+                    case 'conference_room':
+                        // Create a conference room entity in the layout_entities table
+                        $layoutEntity = LayoutEntity::create([
+                            'layout_id' => $layout->id,
+                            'type' => 'Conference',
+                            'x-position' => $entity['x_position'],
+                            'y-position' => $entity['y_position'],
+                            'rotation' => $entity['rotation'],
+                        ]);
+    
+                        // Now create the conference room
+                        CabinAndConferenceRoom::create([
+                            'layout_entity_id' => $layoutEntity->id,
+                            'type' => 'conference_room',
+                        ]);
+                        break;
+    
+                    case 'partition':
+                        // Create a partition entity in the layout_entities table
+                        LayoutEntity::create([
+                            'layout_id' => $layout->id,
+                            'type' => 'Partition',
+                            'x-position' => $entity['x_position'],
+                            'y-position' => $entity['y_position'],
+                            'rotation' => $entity['rotation'],
+                        ]);
+                        break;
+    
+                    case 'entrance':
+                        // Create an entrance entity in the layout_entities table
+                        LayoutEntity::create([
+                            'layout_id' => $layout->id,
+                            'type' => 'Entrance',
+                            'x-position' => $entity['x_position'],
+                            'y-position' => $entity['y_position'],
+                            'rotation' => $entity['rotation'],
+                        ]);
+                        break;
                 }
             }
-
+    
             // Commit transaction
             \DB::commit();
-
+    
             return $layout;
         } catch (\Exception $e) {
             // Rollback transaction in case of any error
@@ -110,4 +174,5 @@ class LayoutService implements LayoutServiceInterface
             throw $e;
         }
     }
+    
 }

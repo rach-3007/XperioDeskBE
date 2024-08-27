@@ -13,7 +13,7 @@ class Layout extends Model
 
     protected $fillable = [
         'module_id',
-        'name',
+        'layout_name',
     ];
 
     public function module()
