@@ -10,7 +10,7 @@ class Building extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
     protected $fillable = [
         'building_name',
         'is_active',
