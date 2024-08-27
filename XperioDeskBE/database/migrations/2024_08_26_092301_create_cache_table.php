@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('cache', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('seat_id')->constrained('seats');
-            $table->foreignId('user_id')->constrained('users')->nullable();
-            $table->string('booked_by');
-            $table->datetime('start_date');
-            $table->datetime('end_date');
             $table->timestamps();
         });
     }
@@ -27,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('cache');
     }
 };
