@@ -6,14 +6,15 @@ use App\Http\Controllers\SeatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Api\AnalyticsController;
 
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Api\AnalyticsController;
+
 
     Route::prefix('seats')->group(function () {
         Route::get('/', [SeatController::class, 'index']);

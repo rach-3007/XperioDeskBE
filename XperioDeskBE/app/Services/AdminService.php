@@ -34,13 +34,12 @@ class AdminService implements AdminServiceInterface
 
         return $booking;
     }
-
+    //Assign seats to a single user
     public function assignSeat(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'seat_id' => 'required|exists:seats,id',
             'user_id' => 'required|exists:users,id',
-            'booked_for' => 'required|date',
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
@@ -131,7 +130,7 @@ class AdminService implements AdminServiceInterface
                         });
                 }
             })
-            ->orWhereHas('seat', function($query) {
+            ->orWhereHas('seat', function ($query) {
                 $query->where('is_active', false);
             })
             ->exists();
@@ -149,7 +148,6 @@ class AdminService implements AdminServiceInterface
                     'seat_id' => $seat->id,
                     'user_id' => $assignment['user_id'],
                     'booked_by' => $assignment['booked_by'],
-                    'booked_for' => $assignment['booked_for'],
                     'start_date' => $assignment['start_date'],
                     'end_date' => $assignment['end_date'],
                 ]);
