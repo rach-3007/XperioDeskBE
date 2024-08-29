@@ -42,6 +42,7 @@ class AdminService implements AdminServiceInterface
             'user_id' => 'required|exists:users,id',
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            'booked_by'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -62,7 +63,8 @@ class AdminService implements AdminServiceInterface
         $booking = Booking::create([
             'seat_id' => $seat->id,
             'user_id' => $request->user_id,
-            'booked_by' => Auth::user()->id,
+            // 'booked_by' => Auth::user()->id,
+            'booked_by'=> $request->booked_by,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
         ]);
