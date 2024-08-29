@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Seat;
 use App\ServiceInterfaces\SeatServiceInterface;
+use Illuminate\Http\Request;
 
 class SeatService implements SeatServiceInterface
 {
@@ -17,14 +18,16 @@ class SeatService implements SeatServiceInterface
         return Seat::findOrFail($id);
     }
 
-    public function createSeat(array $data)
+    public function createSeat(Request $request)
     {
+        $data = $request->all();
         return Seat::create($data);
     }
 
-    public function updateSeat($id, array $data)
+    public function updateSeat($id, Request $request)
     {
         $seat = Seat::findOrFail($id);
+        $data = $request->all();
         $seat->update($data);
         return $seat;
     }
@@ -43,10 +46,9 @@ class SeatService implements SeatServiceInterface
     }
 
     public function restoreSeat($id)
-{
-    $seat = Seat::withTrashed()->findOrFail($id);
-    $seat->restore();
-    return $seat;
-}
-
+    {
+        $seat = Seat::withTrashed()->findOrFail($id);
+        $seat->restore();
+        return $seat;
+    }
 }
