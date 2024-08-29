@@ -48,30 +48,33 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/modules/{id}', [ModuleController::class, 'update']);
     Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 
+
+
+    Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
+    // View All Bookings for a Specific User
+    Route::get('/admin/users/{id}/bookings', [AdminController::class, 'viewUserBookings']);
+
+    // Cancel a Booking (Soft Delete)
+    Route::delete('/bookings/{id}', [AdminController::class, 'cancelBooking']);
+
+    // Assign Seat to User
+    Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
+
+    // Bulk Cancel Bookings
+    Route::delete('/admin/cancel-bookings', [AdminController::class, 'bulkCancelBookings']);
+
+    // Bulk Assign Seats to Users
+    Route::post('/admin/assign-seats', [AdminController::class, 'bulkAssignSeats']);
+
+    // Search and Filter Users
+    Route::get('/admin/search-users', [AdminController::class, 'searchUsers']);
+
+    // Search and Filter Bookings
+    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
+
 });
 
 
-Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
-// View All Bookings for a Specific User
-Route::get('/admin/users/{id}/bookings', [AdminController::class, 'viewUserBookings']);
-
-// Cancel a Booking (Soft Delete)
-Route::delete('/bookings/{id}', [AdminController::class, 'cancelBooking']);
-
-// Assign Seat to User
-Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
-
-// Bulk Cancel Bookings
-Route::delete('/admin/cancel-bookings', [AdminController::class, 'bulkCancelBookings']);
-
-// Bulk Assign Seats to Users
-Route::post('/admin/assign-seats', [AdminController::class, 'bulkAssignSeats']);
-
-// Search and Filter Users
-Route::get('/admin/search-users', [AdminController::class, 'searchUsers']);
-
-// Search and Filter Bookings
-Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
 
 // Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
 // Route::get('/analytics/seat-occupancy', [AnalyticsController::class, 'getSeatOccupancy']);
