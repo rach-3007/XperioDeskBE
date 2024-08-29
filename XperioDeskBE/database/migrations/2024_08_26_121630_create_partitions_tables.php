@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('layout_entities', function (Blueprint $table) {
+        Schema::create('partitions_tables', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('layout_id')->constrained('layouts');
-            $table->enum('type',['Seat','Cabin','Conference','Partition','Entrance']); // Include Entrance
+            $table->foreignId('layout_entity_id')->constrained('layout_entities');
             $table->string('x-position');
-            $table->string('y-position');
-            $table->string('rotation');
+            $table->string('height');         
+            $table->string('width');         
+            $table->string('y-position');         
+               $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('layout_entities');
+        Schema::dropIfExists('partitions_tables');
     }
 };
