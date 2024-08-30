@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('layout_id')->constrained('layouts');
             $table->enum('type',['Seat','Cabin','Conference','Partition','Entrance']);
-            $table->string('x-position');
-            $table->string('y-position');
+            $table->string('x_position');
+            $table->string('y_position');
             $table->string('rotation');
             $table->timestamps();
         });
