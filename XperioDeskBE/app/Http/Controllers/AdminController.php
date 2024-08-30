@@ -48,7 +48,7 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error retrieving user bookings: ' . $e->getMessage(),
-            ], 500); // Or 404 if you want to specifically handle "user not found"
+            ], 500); 
         }
     }
 
@@ -67,7 +67,7 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error canceling booking: ' . $e->getMessage(),
-            ], 500); // Or 404 if you want to specifically handle "booking not found"
+            ], 500);
         }
     }
 
@@ -95,6 +95,8 @@ class AdminController extends Controller
         }
     }
 
+
+
     // 5. Bulk Cancel Bookings
     public function bulkCancelBookings(Request $request)
     {
@@ -106,7 +108,7 @@ class AdminController extends Controller
                 'message' => 'Bookings canceled successfully',
                 'data' => $bookings,
             ]);
-        } catch (\InvalidArgumentException $e) { // Catch validation errors
+        } catch (\InvalidArgumentException $e) { 
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -119,6 +121,8 @@ class AdminController extends Controller
         }
     }
 
+
+
     // 6. Bulk Assign Seats to Users
     public function bulkAssignSeats(Request $request)
     {
@@ -130,11 +134,11 @@ class AdminController extends Controller
                 'message' => 'Seats assigned successfully.',
                 'data' => $assignments, 
             ]);
-        } catch (\InvalidArgumentException $e) { // Catch validation or conflict errors
+        } catch (\InvalidArgumentException $e) { 
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
-            ], 400); // Bad Request for validation errors, 409 Conflict for booking conflicts
+            ], 400); 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -143,6 +147,7 @@ class AdminController extends Controller
             ], 500); 
         }
     }
+
 
     // 7. Search and Filter Users
     public function searchUsers(Request $request)

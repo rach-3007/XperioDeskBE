@@ -8,6 +8,7 @@ use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\UserBookingController;
 
 
 Route::post('register', [UserController::class, 'register']);
@@ -70,11 +71,15 @@ Route::middleware('auth:api')->group(function () {
 
     // Search and Filter Bookings
     Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
-
+    //User USER USER Booking3   
+    Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
+    Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
 });
-Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
-  // Assign Seat to User
-  Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
+
+    
+    Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
+    // Assign Seat to User
+   
 
 
 // Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
