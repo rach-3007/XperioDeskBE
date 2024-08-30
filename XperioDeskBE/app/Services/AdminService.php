@@ -22,7 +22,7 @@ class AdminService implements AdminServiceInterface
     {
         return User::with('bookings.seat')->findOrFail($userId)->bookings;
     }
-
+    //cancel booking
     public function cancelBooking($bookingId)
     {
         $booking = Booking::findOrFail($bookingId);
@@ -42,36 +42,47 @@ class AdminService implements AdminServiceInterface
             'user_id' => 'required|exists:users,id',
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
+            // 'booked_by'=>'required'
         ]);
 
-        if ($validator->fails()) {
-            throw new \InvalidArgumentException('Validation error: ' . $validator->errors());
+        DB::beginTransaction();
+        try {
+
+            if ($validator->fails()) {
+                throw new \InvalidArgumentException('Validation error: ' . $validator->errors());
+            }
+
+            $seat = Seat::findOrFail($request->seat_id);
+            $existingBooking = Booking::where('seat_id', $seat->id)
+                ->where(function ($query) use ($request) {
+                    $query->whereBetween('start_date', [$request->start_date, $request->end_date])
+                        ->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
+                })->first();
+
+            if ($existingBooking) {
+                throw new \InvalidArgumentException('Seat is already booked for the selected date range');
+            }
+
+            $booking = Booking::create([
+                'seat_id' => $seat->id,
+                'user_id' => $request->user_id,
+                'booked_by' => Auth::user()->id,
+                // 'booked_by'=> $request->booked_by,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
+
+            $seat->update(['status' => 'booked', 'booked_by_user_id' => $request->user_id]);
+            DB::commit();
+            return $booking;
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
-
-        $seat = Seat::findOrFail($request->seat_id);
-        $existingBooking = Booking::where('seat_id', $seat->id)
-            ->where(function ($query) use ($request) {
-                $query->whereBetween('start_date', [$request->start_date, $request->end_date])
-                    ->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
-            })->first();
-
-        if ($existingBooking) {
-            throw new \InvalidArgumentException('Seat is already booked for the selected date range');
-        }
-
-        $booking = Booking::create([
-            'seat_id' => $seat->id,
-            'user_id' => $request->user_id,
-            'booked_by' => Auth::user()->id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-        ]);
-
-        $seat->update(['status' => 'booked']);
-
-        return $booking;
     }
 
+    // bulk cancel booking
     public function bulkCancelBookings(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -95,7 +106,7 @@ class AdminService implements AdminServiceInterface
 
         return $bookings;
     }
-
+    // assign seat as bulk 
     public function bulkAssignSeats(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -103,7 +114,6 @@ class AdminService implements AdminServiceInterface
             'assignments.*.seat_id' => 'required|exists:seats,id',
             'assignments.*.user_id' => 'required|exists:users,id',
             'assignments.*.booked_by' => 'required|exists:users,id',
-            'assignments.*.booked_for' => 'required|date',
             'assignments.*.start_date' => 'required|date|before_or_equal:assignments.*.end_date',
             'assignments.*.end_date' => 'required|date|after_or_equal:assignments.*.start_date',
         ]);
@@ -160,6 +170,7 @@ class AdminService implements AdminServiceInterface
         return $assignments;
     }
 
+    //filter  users
     public function searchUsers(Request $request)
     {
         $query = User::query();
@@ -178,7 +189,7 @@ class AdminService implements AdminServiceInterface
 
         return $query->get();
     }
-
+    //filter bokings
     public function searchBookings(Request $request)
     {
         $query = Booking::with('seat', 'user');
