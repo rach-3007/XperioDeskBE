@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Models\CabinAndConferenceRoom;
 use App\Models\Layout;
+use App\Models\LayoutEntity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Seat;
 use App\ServiceInterfaces\LayoutServiceInterface;
+use illuminate\Support\Facades\DB;
 
 class LayoutService implements LayoutServiceInterface
 {
@@ -110,4 +112,39 @@ class LayoutService implements LayoutServiceInterface
             throw $e;
         }
     }
+    
+   
+
+public function getLayoutWithEntities($id)
+{
+    $layout = Layout::with('layoutEntities')->findOrFail($id);
+
+    $layout->layoutEntities->each(function ($entity) {
+        switch ($entity->type) {
+            case 'Seat':
+                $entity->seat = Seat::where('layout_entity_id', $entity->id)->first();
+                break;
+            
+            case 'Cabin':
+            case 'Conference Room':
+                $entity->cabinsAndConferenceRoom = CabinAndConferenceRoom::where('layout_entity_id', $entity->id)->first();
+                break;
+
+            case 'Partition':
+                $entity->partitionDetails = LayoutEntity::where('layout_entity_id', $entity->id)->first();
+                break;
+
+            case 'Entrance':
+                $entity->entranceDetails = LayoutEntity::where('layout_entity_id', $entity->id)->first();
+                break;
+
+            default:
+                $entity->additionalDetails = 'No additional details available';
+                break;
+        }
+    });
+
+    return response()->json($layout, 200);
+}
+
 }

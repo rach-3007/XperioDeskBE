@@ -7,7 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Api\AnalyticsController;
+// use App\Http\Controllers\Api\AnalyticsController;
 
 
 Route::post('register', [UserController::class, 'register']);
@@ -72,7 +72,19 @@ Route::middleware('auth:api')->group(function () {
     // Search and Filter Bookings
     Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
 
+
 });
+
+Route::prefix('layouts')->group(function () {
+    Route::get('/', [LayoutController::class, 'index']);
+    Route::get('{id}', [LayoutController::class, 'show']);
+    Route::post('/', [LayoutController::class, 'store']);
+    Route::put('{id}', [LayoutController::class, 'update']);
+    Route::delete('{id}', [LayoutController::class, 'destroy']);
+    Route::post('create-with-entities', [LayoutController::class, 'createLayoutWithEntities']);
+    Route::get('{id}/entities', [LayoutController::class, 'getLayoutWithEntities']);
+});
+
 
 
 
