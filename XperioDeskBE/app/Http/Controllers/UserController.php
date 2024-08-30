@@ -32,4 +32,29 @@ class UserController extends Controller
 
         return response()->json($this->userService->updateRole($id, $data['role']));
     }
+
+    public function login(Request $request)
+    {
+        return $this->userService->login($request);
+    }
+
+    public function register(Request $request)
+    {
+        return $this->userService->register($request);
+    }
+
+    public function logout()
+    {
+        return $this->userService->logout();
+    }
+
+    public function refresh()
+    {
+        return $this->userService->refresh();
+    }
+
+    public function userProfile()
+    {
+        return $this->userService->userProfile();
+    }
 }

@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('seat_id')->constrained('seats');
             $table->foreignId('user_id')->constrained('users')->nullable();
-            $table->enum('booked_by',['User','Admin']);
-            $table->string('booked_for');
+            $table->string('booked_by');
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->timestamps();
+
         });
     }
 

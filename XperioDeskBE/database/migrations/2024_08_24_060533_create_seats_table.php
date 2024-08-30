@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('module_id')->constrained('modules');
             $table->foreignId('booked_by_user_id')->constrained('users')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->foreignId('layout_entities_id')->constrained('layout_entities');
+            $table->foreignId('layout_entity_id')->constrained('layout_entities');
             $table->enum('status',['available','booked','permanently_booked'])->default('available');
             $table->softDeletes();
             $table->timestamps();
