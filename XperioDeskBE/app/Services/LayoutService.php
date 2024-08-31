@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Seat;
 use App\ServiceInterfaces\LayoutServiceInterface;
-use Illuminate\Support\Facades\DB;
+
 
 class LayoutService implements LayoutServiceInterface
 {
