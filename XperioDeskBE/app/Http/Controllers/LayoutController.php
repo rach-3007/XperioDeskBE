@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\LayoutServiceInterface;
+use App\ServiceInterfaces\LayoutServiceInterface;
 use Illuminate\Http\Request;
 
 class LayoutController extends Controller
