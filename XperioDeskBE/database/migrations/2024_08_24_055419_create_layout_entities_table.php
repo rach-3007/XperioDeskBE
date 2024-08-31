@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('layout_entities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('layout_id')->constrained('layouts');
-            $table->enum('type',['Seat','Cabin','Conference','Partition','Entrance']); // Include Entrance
-            $table->string('x-position');
-            $table->string('y-position');
+            $table->enum('type',['Seat','Cabin','Conference','Partition','Entrance']);
+            $table->string('x_position');
+            $table->string('y_position');
             $table->string('rotation');
             $table->timestamps();
         });

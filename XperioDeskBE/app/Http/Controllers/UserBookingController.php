@@ -53,4 +53,25 @@ class UserBookingController extends Controller
     //         ], 500);
     //     }
     // }
+
+    public function cancelBooking(Request $request)
+    {
+        try {
+            $response = $this->userService->cancelBooking($request);
+    
+            return $response; 
+        } catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error cancelling booking: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+
 }

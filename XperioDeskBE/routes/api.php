@@ -37,10 +37,10 @@ Route::middleware('auth:api')->group(function () {
     // Layout Routes
     Route::get('/layouts', [LayoutController::class, 'index']);
     Route::get('/layouts/{id}', [LayoutController::class, 'show']);
-    Route::post('/layouts', [LayoutController::class, 'store']);
+    // Route::post('/layouts', [LayoutController::class, 'store']);
     Route::put('/layouts/{id}', [LayoutController::class, 'update']);
     Route::delete('/layouts/{id}', [LayoutController::class, 'destroy']);
-    Route::post('/layouts', [LayoutController::class, 'createLayout']);
+    Route::post('/layouts', [LayoutController::class, 'createLayoutWithEntities']);
 
     // Module Routes
     Route::get('/modules', [ModuleController::class, 'index']);
@@ -70,7 +70,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/search-users', [AdminController::class, 'searchUsers']);
 
     // Search and Filter Bookings
-    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
+    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);   
     //User USER USER Booking3   
     Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
     Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
