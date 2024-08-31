@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Seat;
 use App\ServiceInterfaces\LayoutServiceInterface;
+use Illuminate\Support\Facades\DB;
 
 class LayoutService implements LayoutServiceInterface
 {
@@ -73,7 +74,7 @@ class LayoutService implements LayoutServiceInterface
     public function createLayoutWithEntities(Request $request)
     {
         // Start transaction to ensure atomic operation
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             // Create the Layout
             $layout = Layout::create([
@@ -101,12 +102,12 @@ class LayoutService implements LayoutServiceInterface
             }
 
             // Commit transaction
-            \DB::commit();
+            DB::commit();
 
             return $layout;
         } catch (\Exception $e) {
             // Rollback transaction in case of any error
-            \DB::rollBack();
+            DB::rollBack();
             throw $e;
         }
     }

@@ -70,7 +70,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/search-users', [AdminController::class, 'searchUsers']);
 
     // Search and Filter Bookings
-    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
+    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);   
     //User USER USER Booking3   
     Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
     Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);

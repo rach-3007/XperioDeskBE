@@ -78,6 +78,47 @@ class UserBookingService implements UserBookingServiceInterface
         
     }
 
+    public function cancelBooking(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'booking_id' => 'required|exists:bookings,id',
+    ]);
+
+    if ($validator->fails()) {
+        throw new \InvalidArgumentException('Validation error: ' . $validator->errors()->first());
+    }
+
+    DB::beginTransaction();
+
+    try {
+        $booking = Booking::where('id', $request->booking_id)
+            ->where('user_id', Auth::user()->id) // Ensure the user owns the booking
+            ->first();
+
+        if (!$booking) {
+            throw new \InvalidArgumentException('Booking not found or you do not have permission to cancel this booking.');
+        }
+
+        // Update the seat status
+        $seat = Seat::where('id', $booking->seat_id)->lockForUpdate()->first();
+        $seat->update([
+            'status' => 'available',
+            'booked_by_user_id' => null,
+        ]);
+
+        // Delete the booking
+        $booking->delete();
+
+        DB::commit();
+
+        return response()->json(['message' => 'Booking canceled successfully.'], 200);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        throw $e;
+    }
+}
+
+
 
 }
 
