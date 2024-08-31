@@ -37,10 +37,10 @@ Route::middleware('auth:api')->group(function () {
     // Layout Routes
     Route::get('/layouts', [LayoutController::class, 'index']);
     Route::get('/layouts/{id}', [LayoutController::class, 'show']);
-    Route::post('/layouts', [LayoutController::class, 'store']);
+    // Route::post('/layouts', [LayoutController::class, 'store']);
     Route::put('/layouts/{id}', [LayoutController::class, 'update']);
     Route::delete('/layouts/{id}', [LayoutController::class, 'destroy']);
-    Route::post('/layouts', [LayoutController::class, 'createLayout']);
+    Route::post('/layouts', [LayoutController::class, 'createLayoutWithEntities']);
 
     // Module Routes
     Route::get('/modules', [ModuleController::class, 'index']);
