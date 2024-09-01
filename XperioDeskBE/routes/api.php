@@ -23,10 +23,12 @@ Route::middleware('auth:api')->group(function () {
         Route::put('seats-restore/{id}', [SeatController::class, 'restore']);
     });
     
-    Route::prefix('user')->group(function () {
-        Route::put('change-password', [UserController::class, 'changePassword']);
-        Route::put('role/{id}', [UserController::class, 'updateRole']);
-    });
+    //User Routes
+        Route::put('user/change-password', [UserController::class, 'changePassword']);
+        Route::get('/users-with-roles', [UserController::class, 'getUsersWithRoles']);
+        Route::put('/users/{id}/update-role', [UserController::class, 'updateUserRole']);
+        
+    
     
 
     // Layout Routes

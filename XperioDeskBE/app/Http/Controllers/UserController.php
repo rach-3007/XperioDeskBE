@@ -24,14 +24,7 @@ class UserController extends Controller
         return response()->json($this->userService->changePassword($data['user_id'], $data['new_password']));
     }
 
-    public function updateRole(Request $request, $id)
-    {
-        $data = $request->validate([
-            'role' => 'required|in:User,Admin,Privileged_User',
-        ]);
-
-        return response()->json($this->userService->updateRole($id, $data['role']));
-    }
+    
 
     public function login(Request $request)
     {
@@ -56,5 +49,31 @@ class UserController extends Controller
     public function userProfile()
     {
         return $this->userService->userProfile();
+    }
+
+    // Get a list of users with their roles
+    public function getUsersWithRoles()
+    {
+        try {
+            $users = $this->userService->getUsersWithRoles();
+            return response()->json($users, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error fetching users with roles', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    // Update the user's role
+    public function updateUserRole(Request $request, $id)
+    {
+        $request->validate([
+            'role' => 'required|string|in:Admin,User',
+        ]);
+
+        try {
+            $this->userService->updateUserRole($id, $request->input('role'));
+            return response()->json(['message' => 'User role updated successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error updating user role', 'message' => $e->getMessage()], 500);
+        }
     }
 }
