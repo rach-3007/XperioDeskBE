@@ -7,8 +7,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AdminController;
+<<<<<<< HEAD
+// use App\Http\Controllers\Api\AnalyticsController;
+=======
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\UserBookingController;
+>>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 
 
 Route::post('register', [UserController::class, 'register']);
@@ -72,6 +76,24 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/search-users', [AdminController::class, 'searchUsers']);
 
     // Search and Filter Bookings
+<<<<<<< HEAD
+    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
+
+
+});
+
+Route::prefix('layouts')->group(function () {
+    Route::get('/', [LayoutController::class, 'index']);
+    Route::get('{id}', [LayoutController::class, 'show']);
+    Route::post('/', [LayoutController::class, 'store']);
+    Route::put('{id}', [LayoutController::class, 'update']);
+    Route::delete('{id}', [LayoutController::class, 'destroy']);
+    Route::post('create-with-entities', [LayoutController::class, 'createLayoutWithEntities']);
+    Route::get('{id}/entities', [LayoutController::class, 'getLayoutWithEntities']);
+});
+
+
+=======
     Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);   
     //User USER USER Booking3   
     Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
@@ -82,6 +104,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
     // Assign Seat to User
    
+>>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 
 
 // Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
