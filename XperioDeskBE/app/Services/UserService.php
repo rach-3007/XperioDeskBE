@@ -34,7 +34,7 @@ class UserService implements UserServiceInterface
          $user = User::findOrFail($userId);
          
          
-         $roleModel = Role::where('name', $role)->firstOrFail();
+         $roleModel = Role::where('role_name', $role)->firstOrFail();
  
          $user->role_id = $roleModel->id;
          $user->save();
