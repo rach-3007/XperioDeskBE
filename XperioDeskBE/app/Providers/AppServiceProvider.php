@@ -15,6 +15,8 @@ use App\Services\SeatService;
 use App\Services\UserService;
 use App\ServiceInterfaces\UserBookingServiceInterface;
 use App\Services\UserBookingService;
+use App\Services\AnalyticsService;
+use App\ServiceInterfaces\AnalyticsServiceInterface;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LayoutServiceInterface::class, LayoutService::class);
         $this->app->bind(AdminServiceInterface::class, AdminService::class);
         $this->app->bind(UserBookingServiceInterface::class, UserBookingService::class);
+        $this->app->bind(AnalyticsServiceInterface::class, AnalyticsService::class);
     }
 
     /**
