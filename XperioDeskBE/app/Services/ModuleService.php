@@ -23,8 +23,9 @@ class ModuleService implements ModuleServiceInterface
     public function createModule(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'module_name' => 'required|string|max:255',
+            'building_id' => 'required|integer',
+            
         ]);
 
         if ($validator->fails()) {

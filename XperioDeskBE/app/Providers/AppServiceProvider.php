@@ -13,7 +13,8 @@ use App\ServiceInterfaces\SeatServiceInterface;
 use App\ServiceInterfaces\UserServiceInterface;
 use App\Services\SeatService;
 use App\Services\UserService;
-
+use App\ServiceInterfaces\UserBookingServiceInterface;
+use App\Services\UserBookingService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ModuleServiceInterface::class, ModuleService::class);
         $this->app->bind(LayoutServiceInterface::class, LayoutService::class);
         $this->app->bind(AdminServiceInterface::class, AdminService::class);
+        $this->app->bind(UserBookingServiceInterface::class, UserBookingService::class);
     }
 
     /**

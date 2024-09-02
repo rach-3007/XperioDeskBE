@@ -6,7 +6,7 @@ use App\Models\User;
 use App\ServiceInterfaces\UserServiceInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 use Validator;
@@ -22,14 +22,23 @@ class UserService implements UserServiceInterface
         return $user;
     }
 
-    public function updateRole($userId, $role)
-    {
-        $user = User::findOrFail($userId);
-        $user->role = $role;
-        $user->save();
-        return $user;
-    }
-
+     // Fetch users with their roles
+     public function getUsersWithRoles()
+     {
+         return User::with('role')->get(['id', 'name', 'email', 'role_id']);
+     }
+ 
+     // Update the user's role
+     public function updateUserRole($userId, $role)
+     {
+         $user = User::findOrFail($userId);
+         
+         
+         $roleModel = Role::where('name', $role)->firstOrFail();
+ 
+         $user->role_id = $roleModel->id;
+         $user->save();
+     }
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [

@@ -36,10 +36,15 @@ class Layout extends Model
     use HasFactory;
 
     protected $fillable = [
+<<<<<<< HEAD
         'module_name',
         'access_dus',
         'layout_entities',
         'entry_point',
+=======
+        'module_id',
+        'layout_name',
+>>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     ];
 
     protected $casts = [
