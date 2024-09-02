@@ -12,5 +12,5 @@ interface LayoutServiceInterface
     public function updateLayout(Request $request, $id);
     public function deleteLayout($id);
     public function createLayoutWithEntities(Request $request);
-    public function getLayoutwithEntities($id)
+    public function getLayoutwithEntities($id);
 }

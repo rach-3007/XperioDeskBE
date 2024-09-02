@@ -47,4 +47,8 @@ class Layout extends Model
         'layout_entities' => 'array',
         'entry_point' => 'array',
     ];
+    public function layoutEntities()
+    {
+        return $this->hasMany(LayoutEntity::class);
+    }
 }

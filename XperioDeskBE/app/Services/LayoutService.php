@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Seat;
 use App\ServiceInterfaces\LayoutServiceInterface;
-use illuminate\Support\Facades\DB;
+use Illuminate\Support\FACADES\DB;
 
 class LayoutService implements LayoutServiceInterface
 {
@@ -103,12 +103,12 @@ class LayoutService implements LayoutServiceInterface
             }
 
             // Commit transaction
-            \DB::commit();
+            DB::commit();
 
             return $layout;
         } catch (\Exception $e) {
             // Rollback transaction in case of any error
-            \DB::rollBack();
+            DB::rollBack();
             throw $e;
         }
     }
@@ -122,20 +122,20 @@ public function getLayoutWithEntities($id)
     $layout->layoutEntities->each(function ($entity) {
         switch ($entity->type) {
             case 'Seat':
-                $entity->seat = Seat::where('layout_entity_id', $entity->id)->first();
+                $entity->seat = Seat::where('layout_entities_id', $entity->id)->first();
                 break;
             
             case 'Cabin':
             case 'Conference Room':
-                $entity->cabinsAndConferenceRoom = CabinAndConferenceRoom::where('layout_entity_id', $entity->id)->first();
+                $entity->cabinsAndConferenceRoom = CabinAndConferenceRoom::where('layout_entities_id', $entity->id)->first();
                 break;
 
             case 'Partition':
-                $entity->partitionDetails = LayoutEntity::where('layout_entity_id', $entity->id)->first();
+                $entity->partitionDetails = LayoutEntity::where('layout_entities_id', $entity->id)->first();
                 break;
 
             case 'Entrance':
-                $entity->entranceDetails = LayoutEntity::where('layout_entity_id', $entity->id)->first();
+                $entity->entranceDetails = LayoutEntity::where('layout_entities_id', $entity->id)->first();
                 break;
 
             default:
