@@ -4,16 +4,13 @@ namespace App\Services;
 
 use App\Models\CabinsAndConferenceRoom;
 use App\Models\Layout;
-<<<<<<< HEAD
-=======
 use Illuminate\Support\Facades\DB;
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 use App\Models\LayoutEntity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Seat;
 use App\ServiceInterfaces\LayoutServiceInterface;
-use Illuminate\Support\FACADES\DB;
+
 
 
 class LayoutService implements LayoutServiceInterface
@@ -99,53 +96,6 @@ class LayoutService implements LayoutServiceInterface
         'module_id' => $validatedData['module_id'],
     ]);
 
-<<<<<<< HEAD
-            // Commit transaction
-            DB::commit();
-
-            return $layout;
-        } catch (\Exception $e) {
-            // Rollback transaction in case of any error
-            DB::rollBack();
-            throw $e;
-        }
-    }
-    
-   
-
-public function getLayoutWithEntities($id)
-{
-    $layout = Layout::with('layoutEntities')->findOrFail($id);
-
-    $layout->layoutEntities->each(function ($entity) {
-        switch ($entity->type) {
-            case 'Seat':
-                $entity->seat = Seat::where('layout_entities_id', $entity->id)->first();
-                break;
-            
-            case 'Cabin':
-            case 'Conference Room':
-                $entity->cabinsAndConferenceRoom = CabinAndConferenceRoom::where('layout_entities_id', $entity->id)->first();
-                break;
-
-            case 'Partition':
-                $entity->partitionDetails = LayoutEntity::where('layout_entities_id', $entity->id)->first();
-                break;
-
-            case 'Entrance':
-                $entity->entranceDetails = LayoutEntity::where('layout_entities_id', $entity->id)->first();
-                break;
-
-            default:
-                $entity->additionalDetails = 'No additional details available';
-                break;
-        }
-    });
-
-    return response()->json($layout, 200);
-}
-
-=======
     // Create associated entities
     foreach ($validatedData['entities'] as $entity) {
         switch ($entity['type']) {
@@ -239,6 +189,37 @@ public function getLayoutWithEntities($id)
     return response()->json($layout, 201);
 }
 
-    
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
+public function getLayoutWithEntities($id)
+{
+    $layout = Layout::with('layoutEntities')->findOrFail($id);
+ 
+    $layout->layoutEntities->each(function ($entity) {
+        switch ($entity->type) {
+            case 'Seat':
+                $entity->seat = Seat::where('layout_entity_id', $entity->id)->first();
+                break;
+           
+            case 'Cabin': 
+                $entity->cabinsAndConferenceRoom = CabinsAndConferenceRoom::where('layout_entity_id', $entity->id)->first();
+            break;
+            case 'Conference Room':
+                $entity->cabinsAndConferenceRoom = CabinsAndConferenceRoom::where('layout_entity_id', $entity->id)->first();
+                break;
+ 
+            case 'Partition':
+                $entity->partitionDetails = LayoutEntity::where('id', $entity->id)->first();
+                break;
+ 
+            case 'Entrance':
+                $entity->entranceDetails = LayoutEntity::where('id', $entity->id)->first();
+                break;
+ 
+            default:
+                $entity->additionalDetails = 'No additional details available';
+                break;
+        }
+    });
+ 
+    return response()->json($layout, 200);
+}    
 }

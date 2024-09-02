@@ -1,45 +1,25 @@
 <?php
  
 namespace App\Http\Controllers;
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 use App\ServiceInterfaces\LayoutServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
- 
- 
-=======
 
 
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 /**
  * @OA\Info(title="Layout API", version="1.0")
  */
 class LayoutController extends Controller
 {
     protected $layoutService;
-<<<<<<< HEAD
-   
- 
-=======
     
 
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     public function __construct(LayoutServiceInterface $layoutService)
     {
         $this->layoutService = $layoutService;
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     /**
      * @OA\Get(
      *     path="/layouts",
@@ -56,11 +36,6 @@ class LayoutController extends Controller
     {
         return $this->layoutService->getAllLayouts();
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     /**
      * @OA\Get(
      *     path="/layouts/{id}",
@@ -83,11 +58,6 @@ class LayoutController extends Controller
     {
         return $this->layoutService->getLayoutById($id);
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     /**
      * @OA\Post(
      *     path="/layouts",
@@ -108,11 +78,6 @@ class LayoutController extends Controller
     {
         return $this->layoutService->createLayout($request);
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     /**
      * @OA\Put(
      *     path="/layouts/{id}",
@@ -139,11 +104,6 @@ class LayoutController extends Controller
     {
         return $this->layoutService->updateLayout($request, $id);
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     /**
      * @OA\Delete(
      *     path="/layouts/{id}",
@@ -166,11 +126,6 @@ class LayoutController extends Controller
     {
         return $this->layoutService->deleteLayout($id);
     }
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
     /**
      * @OA\Post(
      *     path="/layouts/create-with-entities",
@@ -205,21 +160,14 @@ class LayoutController extends Controller
      */
     public function createLayoutWithEntities(Request $request)
     {
-<<<<<<< HEAD
-     
-        $layout = $this->layoutService->createLayoutWithEntities($request);
- 
-=======
       
         $layout = $this->layoutService->createLayoutWithEntities($request);
 
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
         return response()->json([
             'message' => 'Layout created successfully with all related entities',
             'layout' => $layout
         ], 201);
     }
-<<<<<<< HEAD
     public function getLayoutWithEntities($id)
     {
         $layout = $this->layoutService->getLayoutWithEntities($id);
@@ -228,6 +176,4 @@ class LayoutController extends Controller
             'layout' => $layout
         ], 200);
     }
-=======
->>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 }
