@@ -6,12 +6,20 @@ use App\Http\Controllers\SeatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LayoutController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\AdminController;
+<<<<<<< HEAD
+// use App\Http\Controllers\Api\AnalyticsController;
+=======
+use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\UserBookingController;
+>>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
 
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
+
 
     Route::prefix('seats')->group(function () {
         Route::get('/', [SeatController::class, 'index']);
@@ -21,7 +29,8 @@ Route::middleware('auth:api')->group(function () {
         Route::put('{id}/soft-delete', [SeatController::class, 'destroy']); //Soft-Deletion
         Route::get('{id}/availability', [SeatController::class, 'checkAvailability']);
         Route::put('seats-restore/{id}', [SeatController::class, 'restore']);
-    });
+    
+});
     
     //User Routes
         Route::put('user/change-password', [UserController::class, 'changePassword']);
@@ -46,6 +55,60 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/modules/{id}', [ModuleController::class, 'update']);
     Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 
+
+
+    Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
+    // View All Bookings for a Specific User
+    Route::get('/admin/users/{id}/bookings', [AdminController::class, 'viewUserBookings']);
+
+    // Cancel a Booking (Soft Delete)
+    Route::delete('/bookings/{id}', [AdminController::class, 'cancelBooking']);
+
+  
+
+    // Bulk Cancel Bookings
+    Route::delete('/admin/cancel-bookings', [AdminController::class, 'bulkCancelBookings']);
+
+    // Bulk Assign Seats to Users
+    Route::post('/admin/assign-seats', [AdminController::class, 'bulkAssignSeats']);
+
+    // Search and Filter Users
+    Route::get('/admin/search-users', [AdminController::class, 'searchUsers']);
+
+    // Search and Filter Bookings
+<<<<<<< HEAD
+    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);
+
+
+});
+
+Route::prefix('layouts')->group(function () {
+    Route::get('/', [LayoutController::class, 'index']);
+    Route::get('{id}', [LayoutController::class, 'show']);
+    Route::post('/', [LayoutController::class, 'store']);
+    Route::put('{id}', [LayoutController::class, 'update']);
+    Route::delete('{id}', [LayoutController::class, 'destroy']);
+    Route::post('create-with-entities', [LayoutController::class, 'createLayoutWithEntities']);
+    Route::get('{id}/entities', [LayoutController::class, 'getLayoutWithEntities']);
 });
 
 
+=======
+    Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);   
+    //User USER USER Booking3   
+    Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
+    Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
+});
+
+    
+    Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
+    // Assign Seat to User
+   
+>>>>>>> d20f93d0f7fc961e14c0db212b139643f691ce99
+
+
+// Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
+// Route::get('/analytics/seat-occupancy', [AnalyticsController::class, 'getSeatOccupancy']);
+// Route::get('/analytics/du-wise-bookings', [AnalyticsController::class, 'getDuWiseBookings']);
+// Route::get('/analytics/today-bookings', [AnalyticsController::class, 'getTodayBookings']);
+// Route::get('/analytics/today-utilization-rate', [AnalyticsController::class, 'getTodayUtilizationRate']);

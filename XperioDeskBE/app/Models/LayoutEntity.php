@@ -31,4 +31,8 @@ class LayoutEntity extends Model
     {
         return $this->hasOne(CabinAndConferenceRoom::class);
     }
+    public function partitions()
+    {
+        return $this->hasOne(PartitionTable::class, 'layout_entity_id');
+    }
 }
