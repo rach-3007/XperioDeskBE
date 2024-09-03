@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-
+use Illuminate\Facades\Log;
 use Illuminate\Http\Request;
 use App\ServiceInterfaces\AdminServiceInterface;
 
@@ -186,4 +186,38 @@ class AdminController extends Controller
             ], 500); 
         }
     }
+
+    public function assignPermanentSeat(Request $request)
+{
+    try {
+        // Attempt to assign the permanent seat using the service layer
+        $booking = $this->adminService->assignPermanentSeat($request);
+ 
+        // If the booking was successful, return a success response
+        return response()->json([
+            'success' => true,
+            'data' => $booking,
+            'message' => 'Seat assigned permanently successfully.'
+        ], 200);
+    } catch (\InvalidArgumentException $e) {
+        // Handle validation errors or seat already booked scenario
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 400);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        // Handle case where the seat was not found
+        return response()->json([
+            'success' => false,
+            'message' => 'Seat not found.'
+        ], 404);
+    } catch (\Exception $e) {
+        // Handle any other exceptions
+        Log::error('Error assigning permanent seat', ['error' => $e->getMessage()]);
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred while assigning the seat permanently.'
+        ], 500);
+    }
+}
 }

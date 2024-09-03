@@ -13,4 +13,5 @@ interface AdminServiceInterface
     public function bulkAssignSeats(Request $request);
     public function searchUsers(Request $request);
     public function searchBookings(Request $request);
+    public function assignPermanentSeat(Request $request);
 }

@@ -46,22 +46,35 @@ class LayoutService implements LayoutServiceInterface
 
     public function updateLayout(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+         // Validate request data
+         $request->validate([
+            'entities' => 'required|array',
+            'entities.*.id' => 'required|integer|exists:layout_entities,id',
+            'entities.*.x_position' => 'required|numeric',
+            'entities.*.y_position' => 'required|numeric',
+            'entities.*.rotation' => 'nullable|numeric',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        try {
+            // Fetch the layout
+            $layout = Layout::findOrFail($id);
+
+            // Update positions of entities
+            foreach ($request->entities as $entityData) {
+                $entity = $layout->entities()->find($entityData['id']);
+                if ($entity) {
+                    $entity->x_position = $entityData['x_position'];
+                    $entity->y_position = $entityData['y_position'];
+                    $entity->rotation = $entityData['rotation'] ?? $entity->rotation; // Optional: Update rotation if provided
+                    $entity->save();
+                }
+            }
+
+            return response()->json(['message' => 'Layout updated successfully!'], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update layout', 'message' => $e->getMessage()], 500);
         }
-
-        $layout = Layout::findOrFail($id);
-        $layout->update($validator->validated());
-
-        return response()->json([
-            'message' => 'Layout successfully updated',
-            'layout' => $layout
-        ], 200);
     }
 
     public function deleteLayout($id)
@@ -220,6 +233,8 @@ public function getLayoutWithEntities($id)
         }
     });
  
+
+
     return response()->json($layout, 200);
 }    
 }
