@@ -1,9 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Facades\Log;
+
 use Illuminate\Http\Request;
 use App\ServiceInterfaces\AdminServiceInterface;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -187,12 +188,13 @@ class AdminController extends Controller
         }
     }
 
+
     public function assignPermanentSeat(Request $request)
 {
     try {
         // Attempt to assign the permanent seat using the service layer
         $booking = $this->adminService->assignPermanentSeat($request);
- 
+
         // If the booking was successful, return a success response
         return response()->json([
             'success' => true,
@@ -220,4 +222,5 @@ class AdminController extends Controller
         ], 500);
     }
 }
+
 }

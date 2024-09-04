@@ -9,4 +9,6 @@ interface UserBookingServiceInterface
     // public function getUserBookings();
     public function cancelBooking(Request $request);
 
+    public function getUserBookings(Request $request);
+
 }
