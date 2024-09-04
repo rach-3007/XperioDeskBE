@@ -29,7 +29,7 @@ class LayoutEntity extends Model
 
     public function cabinAndConferenceRoom()
     {
-        return $this->hasOne(CabinAndConferenceRoom::class);
+        return $this->hasOne(CabinsAndConferenceRoom::class);
     }
     public function partitions()
     {
