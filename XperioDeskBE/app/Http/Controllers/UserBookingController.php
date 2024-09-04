@@ -72,6 +72,25 @@ class UserBookingController extends Controller
             ], 500);
         }
     }
+
+    //get user booing
+    public function getUserBookings(Request $request)
+{
+    try {
+        $bookings = $this->userService->getUserBookings($request);
+
+        return response()->json([
+            'success' => true,
+            'data' => $bookings
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error fetching bookings: ' . $e->getMessage(),
+        ], 500);
+    }
+}
+
     
 
 }

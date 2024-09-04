@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 use App\ServiceInterfaces\AdminServiceInterface;
+use Illuminate\Support\Facades\Log;
 
 class AdminService implements AdminServiceInterface
 {
@@ -26,7 +27,7 @@ class AdminService implements AdminServiceInterface
     public function cancelBooking($bookingId)
     {
         $booking = Booking::findOrFail($bookingId);
-        $booking->update(['status' => 'canceled']);
+        $booking->delete();
 
         if ($booking->start_date < now()) {
             $booking->seat->update(['status' => 'available']);
@@ -37,51 +38,85 @@ class AdminService implements AdminServiceInterface
     //Assign seats to a single user
     public function assignSeat(Request $request)
     {
+        // Retrieve layout_entity_id from the request
+        $layoutEntityId = $request->input('layout_entity_id');
+        Log::info('Layout Entity ID received:', ['layout_entity_id' => $layoutEntityId]);
+    
+        // Find the seat using the layout_entity_id
+        $seat = Seat::where('layout_entity_id', $layoutEntityId)->first();
+    
+        if (!$seat) {
+            Log::error('Seat not found for the provided layout_entity_id', ['layout_entity_id' => $layoutEntityId]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error assigning seat: Seat not found.'
+            ], 404);
+        }
+    
+        // Now proceed with the rest of the validation and booking logic using the found seat
+        $seatId = $seat->id;
+    
         $validator = Validator::make($request->all(), [
-            'seat_id' => 'required|exists:seats,id',
             'user_id' => 'required|exists:users,id',
-            'start_date' => 'required|date|before_or_equal:end_date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            // 'booked_by'=>'required'
+            'start_date' => 'required|date|before_or_equal:end_date|after_or_equal:today',
+            'end_date' => 'required|date|after_or_equal:start_date|after_or_equal:today',
         ]);
-
+    
         DB::beginTransaction();
         try {
-
             if ($validator->fails()) {
                 throw new \InvalidArgumentException('Validation error: ' . $validator->errors());
             }
-
-            $seat = Seat::findOrFail($request->seat_id);
-            $existingBooking = Booking::where('seat_id', $seat->id)
+    
+            // Check if the user already has an active booking
+            $existingUserBooking = Booking::where('user_id', $request->user_id)
+                ->where(function($query) use ($request) {
+                    $query->where('start_date', '<=', $request->end_date)
+                          ->where('end_date', '>=', $request->start_date);
+                })
+                ->first();
+    
+            if ($existingUserBooking) {
+                throw new \InvalidArgumentException('User already has an active booking during the selected date range');
+            }
+    
+            $existingSeatBooking = Booking::where('seat_id', $seatId)
                 ->where(function ($query) use ($request) {
                     $query->whereBetween('start_date', [$request->start_date, $request->end_date])
-                        ->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
+                          ->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
                 })->first();
-
-            if ($existingBooking) {
+    
+            if ($existingSeatBooking) {
                 throw new \InvalidArgumentException('Seat is already booked for the selected date range');
             }
-
+    
             $booking = Booking::create([
-                'seat_id' => $seat->id,
+                'seat_id' => $seatId,
                 'user_id' => $request->user_id,
-                'booked_by' => Auth::user()->id,
-                // 'booked_by'=> $request->booked_by,
+                // 'booked_by' => Auth::user()->id,
+                'booked_by' => $request->booked_by,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
             ]);
-
+    
             $seat->update(['status' => 'booked', 'booked_by_user_id' => $request->user_id]);
             DB::commit();
-            return $booking;
-
+            return response()->json([
+                'success' => true,
+                'message' => 'Seat assigned successfully.',
+                'booking' => $booking
+            ], 200);
+    
         } catch (Exception $e) {
             DB::rollBack();
-            throw $e;
+            Log::error('Error assigning seat:', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error assigning seat: ' . $e->getMessage()
+            ], 400);
         }
     }
-
+    
     // bulk cancel booking
     public function bulkCancelBookings(Request $request)
     {
@@ -212,4 +247,70 @@ class AdminService implements AdminServiceInterface
 
         return $query->get();
     }
+
+
+    //Permenent allocation
+
+    public function assignPermanentSeat(Request $request)
+    {
+        // Retrieve layout_entity_id from the request
+        $layoutEntityId = $request->input('layout_entity_id');
+        Log::info('Layout Entity ID received:', ['layout_entity_id' => $layoutEntityId]);
+    
+        // Find the seat using the layout_entity_id
+        $seat = Seat::where('layout_entity_id', $layoutEntityId)->first();
+    
+        if (!$seat) {
+            Log::error('Seat not found for the provided layout_entity_id', ['layout_entity_id' => $layoutEntityId]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error assigning seat: Seat not found.'
+            ], 404);
+        }
+    
+        // Calculate start date as the current date
+        $startDate = now();
+    
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+        ]);
+    
+        DB::beginTransaction();
+        try {
+            if ($validator->fails()) {
+                throw new \InvalidArgumentException('Validation error: ' . $validator->errors());
+            }
+    
+            $existingBooking = Booking::where('seat_id', $seat->id)
+                ->where(function ($query) use ($startDate) {
+                    $query->where(function ($q) use ($startDate) {
+                        $q->whereNull('end_date')
+                          ->orWhere('end_date', '>=', $startDate);
+                    });
+                })->first();
+    
+            if ($existingBooking) {
+                throw new \InvalidArgumentException('Seat is already booked or permanently allocated.');
+            }
+    
+            $booking = Booking::create([
+                'seat_id' => $seat->id,
+                'user_id' => $request->user_id,
+                'booked_by' => $request->booked_by,
+                'start_date' => $startDate,
+                'end_date' => null, // No end date for permanent allocation
+            ]);
+    
+            $seat->update(['status' => 'booked', 'booked_by_user_id' => $request->user_id]);
+    
+            DB::commit();
+            return $booking;
+    
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+    
+
 }
