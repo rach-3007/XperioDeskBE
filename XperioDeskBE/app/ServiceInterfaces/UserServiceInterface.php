@@ -14,5 +14,13 @@ interface UserServiceInterface
     public function userProfile();
     public function getUsersWithRoles();
     public function updateUserRole($userId, $role);
+    /**
+     * Get user details by ID.
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function getUserById($id);
+
 
 }
