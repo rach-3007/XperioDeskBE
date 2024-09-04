@@ -25,7 +25,7 @@ class UserService implements UserServiceInterface
      // Fetch users with their roles
      public function getUsersWithRoles()
      {
-         return User::with('role')->get(['id', 'name', 'email', 'role_id']);
+         return User::with('role')->get(['id', 'name', 'email_id', 'role_id']);
      }
  
      // Update the user's role
@@ -61,7 +61,7 @@ class UserService implements UserServiceInterface
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
+            'email_id' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
             'role_id' => 'required',
             'designation' => 'required|string',

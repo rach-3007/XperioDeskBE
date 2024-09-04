@@ -9,6 +9,8 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\UserBookingController;
+use App\Http\Controllers\MicrosoftAuthController;
+
 
 
 Route::post('register', [UserController::class, 'register']);
@@ -93,6 +95,9 @@ Route::middleware('auth:api')->group(function () {
     // Assign Seat to User
    
 });
+// MICROSOFT LOGIN
+Route::post('/loginAzure', [MicrosoftAuthController::class,'loginAzure']);
+
 
 // Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
 // Route::get('/analytics/seat-occupancy', [AnalyticsController::class, 'getSeatOccupancy']);
