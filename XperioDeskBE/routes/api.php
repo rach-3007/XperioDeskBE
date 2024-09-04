@@ -29,6 +29,7 @@ Route::middleware('auth:api')->group(function () {
 });
     
     //User Routes
+        Route::get('/users/{id}', [UserController::class, 'getUserById']);
         Route::put('user/change-password', [UserController::class, 'changePassword']);
         Route::get('/users-with-roles', [UserController::class, 'getUsersWithRoles']);
         Route::put('/users/{id}/update-role', [UserController::class, 'updateUserRole']);

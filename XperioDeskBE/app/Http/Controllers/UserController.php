@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\ServiceInterfaces\UserServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
@@ -74,6 +76,27 @@ class UserController extends Controller
             return response()->json(['message' => 'User role updated successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error updating user role', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+     /**
+     * Fetch user details by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getUserById($id): JsonResponse
+    {
+        try {
+            $user = $this->userService->getUserById($id);
+
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            return response()->json($user, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching user data.'], 500);
         }
     }
 }

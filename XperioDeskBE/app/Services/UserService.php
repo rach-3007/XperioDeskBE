@@ -109,4 +109,15 @@ class UserService implements UserServiceInterface
             'user' => auth()->user()
         ]);
     }
+
+    /**
+     * Get user details by ID.
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function getUserById($id)
+    {
+        return User::find($id); // Fetch user details by ID
+    }
 }
