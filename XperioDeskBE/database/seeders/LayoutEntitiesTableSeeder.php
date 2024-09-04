@@ -10,8 +10,8 @@ class LayoutEntitiesTableSeeder extends Seeder
     public function run(): void
     {
         DB::table('layout_entities')->insert([
-            ['layout_id' => 1, 'type' => 'Seat', 'x-position' => '10', 'y-position' => '20', 'rotation' => '0'],
-            ['layout_id' => 2, 'type' => 'Cabin', 'x-position' => '30', 'y-position' => '40', 'rotation' => '90'],
+            ['layout_id' => 5, 'type' => 'Seat', 'x_position' => '10', 'y_position' => '20', 'rotation' => '0'],
+            ['layout_id' => 6, 'type' => 'Cabin', 'x_position' => '30', 'y_position' => '40', 'rotation' => '90'],
         ]);
     }
 }

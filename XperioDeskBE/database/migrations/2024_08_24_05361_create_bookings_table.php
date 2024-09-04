@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('seat_id')->constrained('seats');
             $table->foreignId('user_id')->constrained('users')->nullable();
             $table->string('booked_by');
+
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->timestamps();

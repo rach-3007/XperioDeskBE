@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
         for ($i = 1; $i <= 15; $i++) {
             DB::table('users')->insert([
                 'name' => 'User ' . $i,
-                'email' => 'user' . $i . '@example.com',
+                'email' => 'rachelle' . $i . '@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'designation' => $designations[array_rand($designations)],
