@@ -305,7 +305,7 @@ class AdminService implements AdminServiceInterface
                 'end_date' => null, // No end date for permanent allocation
             ]);
     
-            $seat->update(['status' => 'booked', 'booked_by_user_id' => $request->user_id]);
+            $seat->update(['status' => 'permanently_booked', 'booked_by_user_id' => $request->user_id]);
     
             DB::commit();
             return $booking;
