@@ -16,7 +16,7 @@ Route::post('login', [UserController::class, 'login']);
 
 
 
-
+Route::middleware('auth:api')->group(function () {
     Route::prefix('seats')->group(function () {
         Route::get('/', [SeatController::class, 'index']);
         Route::get('{id}', [SeatController::class, 'show']);
@@ -85,13 +85,13 @@ Route::post('login', [UserController::class, 'login']);
     //User USER USER Booking3   
     Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
     Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
-
+    Route::post('/assign-permanent-seat', [AdminController::class, 'assignPermanentSeat']);
 
     
     Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
     // Assign Seat to User
    
-
+});
 
 // Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
 // Route::get('/analytics/seat-occupancy', [AnalyticsController::class, 'getSeatOccupancy']);
