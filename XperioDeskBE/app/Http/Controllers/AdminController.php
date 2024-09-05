@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ServiceInterfaces\AdminServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+
 
 class AdminController extends Controller
 {
@@ -222,5 +224,28 @@ class AdminController extends Controller
         ], 500);
     }
 }
+
+public function getBookingsWithDetails(): JsonResponse
+    {
+        try {
+            // Use the service to fetch booking details
+            $bookings = $this->adminService->getBookingsWithDetails();
+           
+            // Return the data as a JSON response
+            return response()->json([
+                'success' => true,
+                'data' => $bookings
+            ], 200);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Failed to fetch booking details: ' . $e->getMessage());
+ 
+            // Return a JSON error response
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching booking details.'
+            ], 500);
+        }
+    }
 
 }

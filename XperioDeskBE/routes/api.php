@@ -18,7 +18,7 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
 
 
-
+Route::get('admin/bookings-details', [AdminController::class, 'getBookingsWithDetails']);
 Route::middleware('auth:api')->group(function () {
     Route::prefix('seats')->group(function () {
         Route::get('/', [SeatController::class, 'index']);
@@ -67,7 +67,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
    
 
-  
+
 
     // Bulk Cancel Bookings
     Route::delete('/admin/cancel-bookings', [AdminController::class, 'bulkCancelBookings']);

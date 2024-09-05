@@ -300,5 +300,53 @@ class AdminService implements AdminServiceInterface
         }
     }
    
+
+    public function getBookingsWithDetails()
+    {
+ 
+ 
+        try {
+            // Fetch bookings with eager loading of necessary relationships.
+            $bookings = Booking::with([
+                'user',
+                'seat' => function ($query) {
+                    $query->with(['layoutEntity.layout', 'module']); // Include 'module' for office information
+                }
+            ])
+                ->select('id', 'user_id', 'seat_id', 'start_date', 'end_date')
+                ->get()
+                ->map(function ($booking) {
+                    // Ensure all relationships are present before accessing them.
+                    if (!$booking->user || !$booking->seat || !$booking->seat->module) {
+                        // Handle missing relationships gracefully, perhaps log an error or return a default value
+                        return [
+                            'employee_id' => 'N/A',
+                            'employee_name' => 'N/A',
+                            'seat' => 'N/A',
+                            'office' => 'N/A',
+                            'start_date' => 'N/A',
+                            'end_date' => 'N/A',
+                        ];
+                    }
+ 
+                    return [
+                        'employee_id' => $booking->user->id,
+                        'employee_name' => $booking->user->name,
+                        'seat' => $booking->seat->seat_number,
+                        'office' => $booking->seat->module->module_name, // Use 'module_name' for office
+                        'start_date' => $booking->start_date,
+                        'end_date' => $booking->end_date,
+                       
+                    ];
+                });
+ 
+            return response()->json($bookings);
+        } catch (Exception $e) {
+            // Log the error and return an error response
+            Log::error('Error fetching booking details: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+ 
+    }
  
 }
