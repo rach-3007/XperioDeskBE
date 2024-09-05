@@ -129,15 +129,25 @@ class UserBookingService implements UserBookingServiceInterface
 
 
 // get user bookings
-public function getUserBookings(Request $request)
+public function getUserBookings($request)
 {
     $userId = Auth::user()->id;
-
-    // Fetch the user's bookings from the database
-    $bookings = Booking::where('user_id', $userId)
+    // $userId = 1; // Hardcoded for testing purposes
+ 
+    if (!$userId) {
+        throw new \Exception('User ID is missing or invalid.');
+    }
+ 
+    // Fetch the user's bookings from the database, including soft-deleted ones
+    $bookings = Booking::withTrashed() // Include soft-deleted records
+                ->where('user_id', $userId)
                 ->orderBy('start_date', 'desc')
                 ->get();
-
+ 
+    if ($bookings->isEmpty()) {
+        return [];
+    }
+ 
     return $bookings;
 }
 

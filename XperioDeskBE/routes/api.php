@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\UserBookingController;
 use App\Http\Controllers\MicrosoftAuthController;
+use App\Http\Controllers\ConcurrentBookingController;
 
 
 
@@ -36,6 +37,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/users-with-roles', [UserController::class, 'getUsersWithRoles']);
         Route::put('/users/{id}/update-role', [UserController::class, 'updateUserRole']);
         
+
+
+        // Route for locking a seat
+        Route::post('/seats/lock', [ConcurrentBookingController::class, 'lockSeat']);
+        // Route for releasing a seat
+        Route::post('/seats/release', [ConcurrentBookingController::class, 'releaseSeat']);
     
     
 
@@ -58,11 +65,7 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
-    // View All Bookings for a Specific User
-    Route::get('/admin/users/{id}/bookings', [AdminController::class, 'viewUserBookings']);
-
-    // Cancel a Booking (Soft Delete)
-    Route::delete('/bookings/{id}', [AdminController::class, 'cancelBooking']);
+   
 
   
 
@@ -93,6 +96,8 @@ Route::middleware('auth:api')->group(function () {
     
     Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
     // Assign Seat to User
+    Route::post('/user/cancel-booking', [UserBookingController::class, 'cancelBooking']);
+    Route::get('/bookings/user', [UserBookingController::class, 'getUserBookings']);
    
 });
 // MICROSOFT LOGIN

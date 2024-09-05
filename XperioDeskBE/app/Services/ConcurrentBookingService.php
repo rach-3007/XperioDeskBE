@@ -45,8 +45,7 @@ class ConcurrentBookingService implements ConcurrentBookingServiceInterface
             }
 
             $seat->status = 'booked';
-            $seat->save();
-
+            $seat->save();           
             DB::commit();
             return true;
         } catch (Exception $e) {

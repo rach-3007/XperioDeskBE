@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SeatBookingServiceInterface;
+use App\Services\ConcurrentBookingServiceInterface;
 use Illuminate\Http\Request;
 
 class ConcurrentBookingController extends Controller
 {
     protected $seatBookingService;
 
-    public function __construct(SeatBookingServiceInterface $seatBookingService)
+    public function __construct(ConcurrentBookingServiceInterface $seatBookingService)
     {
         $this->seatBookingService = $seatBookingService;
     }
