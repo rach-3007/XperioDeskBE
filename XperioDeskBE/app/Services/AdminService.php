@@ -316,5 +316,10 @@ class AdminService implements AdminServiceInterface
         }
     }
    
- 
+    public function getBookingCount()
+    {
+        return Booking::count();
+    }
+    
+    
 }

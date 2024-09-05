@@ -51,6 +51,7 @@ class AdminController extends Controller
                 'message' => 'Error retrieving user bookings: ' . $e->getMessage(),
             ], 500); 
         }
+        
     }
 
     // 3. Cancel a Booking
@@ -188,7 +189,25 @@ class AdminController extends Controller
         }
     }
 
-
+    public function getBookingCount()
+    {
+        try {
+            // Assuming adminService has a method to get the count of bookings
+            $bookingCount = $this->adminService->getBookingCount();
+    
+            return response()->json([
+                'success' => true,
+                'data' => $bookingCount,
+                'message' => 'Booking count retrieved successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error retrieving booking count: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
     public function assignPermanentSeat(Request $request)
 {
     try {

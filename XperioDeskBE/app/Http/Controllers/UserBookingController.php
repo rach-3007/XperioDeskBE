@@ -4,37 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ServiceInterfaces\UserBookingServiceInterface;
+use App\Mail\BookingConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 class UserBookingController extends Controller
 {
     protected $userService;
 
-    public function __construct(UserBookingServiceInterface $userService)
-    {
-        $this->userService = $userService;
-    }
+    // public function __construct(UserBookingServiceInterface $userService)
+    // {
+    //     $this->userService = $userService;
+    // }
 
-    public function bookSeat(Request $request)
-    {
-        try {
-            $booking = $this->userService->bookSeat($request);
+    // public function bookSeat(Request $request)
+    // {
+    //     try {
+    //         $booking = $this->userService->bookSeat($request);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Seat booked successfully',
-                'data' => $booking,
-            ]);
-        } catch (\InvalidArgumentException $e) { 
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 400); 
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error booking seat: ' . $e->getMessage(),
-            ], 500); 
-        }
-    }
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Seat booked successfully',
+    //             'data' => $booking,
+    //         ]);
+    //     } catch (\InvalidArgumentException $e) { 
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 400); 
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Error booking seat: ' . $e->getMessage(),
+    //         ], 500); 
+    //     }
+    // }
 
     // public function viewMyBookings()
     // {
@@ -92,5 +94,41 @@ class UserBookingController extends Controller
 }
 
     
+public function __construct(UserBookingServiceInterface $userService)
+{
+    $this->userService = $userService;
+}
+
+public function bookSeat(Request $request)
+{
+    try {
+        $booking = $this->userService->bookSeat($request);
+
+        // Send booking confirmation email
+        $details = [
+            'name' => $request->input('name'),
+            'booking_date' => $booking['booking_date'], // Adjust according to your data
+            // Add other necessary details
+        ];
+
+        Mail::to($request->input('email'))->send(new BookingConfirmationMail($details));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Seat booked successfully and confirmation email sent.',
+            'data' => $booking,
+        ]);
+    } catch (\InvalidArgumentException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+        ], 400);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error booking seat: ' . $e->getMessage(),
+        ], 500);
+    }
+}
 
 }

@@ -84,15 +84,22 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/admin/search-bookings', [AdminController::class, 'searchBookings']);   
     //User USER USER Booking3   
-    Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
+    // Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);; 
     Route::post('/admin/assign-seat', [AdminController::class, 'assignSeat']);
     Route::post('/assign-permanent-seat', [AdminController::class, 'assignPermanentSeat']);
 
     
     Route::get('/admin/users', [AdminController::class, 'viewAllUsers']);
     // Assign Seat to User
-   
+    Route::post('/user/cancel-booking', [UserBookingController::class, 'cancelBooking']);
+    
+    Route::get('/api/bookings/count', [AdminController::class, 'countBookings']);
+
 });
+
+Route::post('/user/book-seat', [UserBookingController::class, 'bookSeat']);;
+Route::post('/user/bookings', [UserBookingController::class, 'getUserBookings']);;
+
 
 // Route::get('/analytics/total-seats-vs-bookings', [AnalyticsController::class, 'getTotalSeatsVsBookings']);
 // Route::get('/analytics/seat-occupancy', [AnalyticsController::class, 'getSeatOccupancy']);
